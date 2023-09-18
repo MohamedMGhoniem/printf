@@ -1,3 +1,4 @@
+
 /**
  * _printf - Function to print formatted output
  * @format: String
@@ -33,7 +34,7 @@ int _printf(const char *format, ...)
 			}
 			else if (*format == 'c')
 			{
-				char c = va_arg(args, int);
+				char c = (char)va_arg(args, int);
 
 				write(1, &c, 1);
 				ch_count++;
@@ -41,8 +42,8 @@ int _printf(const char *format, ...)
 			else if (*format == 's')
 			{
 				char *str = va_arg(args, char *);
+                
 				int s_len = strlen(str);
-
 				write(1, str, s_len);
 				ch_count += s_len;
 			}
