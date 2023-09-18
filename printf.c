@@ -41,9 +41,10 @@ int _printf(const char *format, ...)
 			}
 			else if (*format == 's')
 			{
-				char *str = va_arg(args, char *);
-                
+				char *str = va_arg(args, char *)
+
 				int s_len = strlen(str);
+
 				write(1, str, s_len);
 				ch_count += s_len;
 			}
