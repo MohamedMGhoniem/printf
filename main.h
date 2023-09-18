@@ -1,6 +1,6 @@
 #ifndef MAIN_H
 #define MAIN_H
-<<<<<<< HEAD
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -39,13 +39,12 @@ struct fmt
  * @fm_t: The function associated.
  */
 typedef struct fmt fmt_t;
-=======
 
 #include<stdarg.h>
 #include<unistd.h>
 #include<string.h>
 #include<stdio.h>
->>>>>>> 15e765c540f12ddb76faa60a16486a31ca0f65d3
+
 
 int _printf(const char *format, ...);
 int handle_print(const char *fmt, int *i,
