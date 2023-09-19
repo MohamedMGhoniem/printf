@@ -1,140 +1,66 @@
 #include "main.h"
-int digits_count(int num);
-int handle_format(char specifier, va_list args);
-void handle_char(char c);
-int handle_string(char *str);
-void handle_integer(int num);
+
+void print_buffer(char buffer[], int *buff_ind);
+
 /**
- * _printf - Function to print formatted output
- * @format: String
- * @...: Indefinite arguments
- *
- * Return: Number of characters printed
+ * _printf - Printf function
+ * @format: format.
+ * Return: Printed chars.
  */
 int _printf(const char *format, ...)
 {
-	va_list args;
-	int printed_chars = 0;
-	int i = 0;
+	int i, printed = 0, printed_chars = 0;
+	int flags, width, precision, size, buff_ind = 0;
+	va_list list;
+	char buffer[BUFF_SIZE];
 
-	va_start(args, format);
+	if (format == NULL)
+		return (-1);
 
-	while (format && format[i])
+	va_start(list, format);
+
+	for (i = 0; format && format[i] != '\0'; i++)
 	{
-		if (format[i] == '%')
+		if (format[i] != '%')
 		{
-			i++;
-			printed_chars += handle_format(format[i], args);
+			buffer[buff_ind++] = format[i];
+			if (buff_ind == BUFF_SIZE)
+				print_buffer(buffer, &buff_ind);
+			/* write(1, &format[i], 1);*/
+			printed_chars++;
 		}
 		else
 		{
-			putchar(format[i]);
-			printed_chars++;
+			print_buffer(buffer, &buff_ind);
+			flags = get_flags(format, &i);
+			width = get_width(format, &i, list);
+			precision = get_precision(format, &i, list);
+			size = get_size(format, &i);
+			++i;
+			printed = handle_print(format, &i, list, buffer,
+				flags, width, precision, size);
+			if (printed == -1)
+				return (-1);
+			printed_chars += printed;
 		}
-		i++;
 	}
 
-	va_end(args);
+	print_buffer(buffer, &buff_ind);
+
+	va_end(list);
 
 	return (printed_chars);
 }
+
 /**
- * handle_format - to handle format
- * @specifier: first arg
- * @args: second arg
- *
- * Return: num of digits
+ * print_buffer - Prints the contents of the buffer if it exist
+ * @buffer: Array of chars
+ * @buff_ind: Index at which to add next char, represents the length.
  */
-int handle_format(char specifier, va_list args)
+void print_buffer(char buffer[], int *buff_ind)
 {
-	if (specifier == 'c')
-	{
-		char c = va_arg(args, int);
+	if (*buff_ind > 0)
+		write(1, &buffer[0], *buff_ind);
 
-		handle_char(c);
-		return (1);
-	}
-	else if (specifier == 's')
-	{
-		char *str = va_arg(args, char *);
-
-		return (handle_string(str));
-	}
-	else if (specifier == '%')
-	{
-		putchar('%');
-		return (1);
-	}
-	else if (specifier == 'd' || specifier == 'i')
-	{
-		int num = va_arg(args, int);
-
-		handle_integer(num);
-		return (digits_count(num));
-	}
-	else
-	{
-		putchar('%');
-		putchar(specifier);
-		return (2);
-	}
-}
-/**
- * handle_char - handling char
- * @c: first arg
- *
-*/
-void handle_char(char c)
-{
-	putchar(c);
-}
-/**
- * handle_string - handling string
- * @str: first arg
- *
- * Return: num of char
-*/
-int handle_string(char *str)
-{
-	int printed_chars = 0;
-
-	while (*str)
-	{
-		putchar(*str);
-		str++;
-		printed_chars++;
-	}
-	return (printed_chars);
-}
-/**
- * handle_integer - handling_integer
- * @num: first arg
-*/
-void handle_integer(int num)
-{
-	printf("%d", num);
-}
-/**
- * digits_count - count digits
- * @num: first arg
- *
- * Return: count of digits
- */
-int digits_count(int num)
-{
-	int count = 0;
-
-	if (num == 0)
-		return (1);
-	if (num < 0)
-	{
-		count++;
-		num = -num;
-	}
-	while (num > 0)
-	{
-		count++;
-		num /= 10;
-	}
-	return (count);
+	*buff_ind = 0;
 }

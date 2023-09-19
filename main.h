@@ -1,6 +1,5 @@
 #ifndef MAIN_H
 #define MAIN_H
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -39,12 +38,6 @@ struct fmt
  * @fm_t: The function associated.
  */
 typedef struct fmt fmt_t;
-
-#include<stdarg.h>
-#include<unistd.h>
-#include<string.h>
-#include<stdio.h>
-
 
 int _printf(const char *format, ...);
 int handle_print(const char *fmt, int *i,
@@ -122,4 +115,3 @@ long int convert_size_number(long int num, int size);
 long int convert_size_unsgnd(unsigned long int num, int size);
 
 #endif /* MAIN_H */
-
